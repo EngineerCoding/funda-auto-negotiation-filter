@@ -14,4 +14,4 @@ Since websites constantly update, this extension may break in future releases of
 - url change: please edit the manifest.json
 - selector change: edit lines 2 and 3 of funda-filter.json
 
-This extension is maintained by me for the duration I am looking for a house myself.
+This extension is maintained by me for the duration I am looking for a house myself. If I don't end up using funda's option to only list available houses: this reduces the pagination as well.. (was fun to create this extension though!)

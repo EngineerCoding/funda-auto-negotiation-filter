@@ -25,68 +25,94 @@ function ContainsIllegalLabel(offeringContainer)
     });
 }
 
+var badgeContainer;
+var badgeSpan;
+var badgeListingsShowing;
+
 function ShowHiddenBadge(offeringContainers)
 {
-    var badgeSpan = document.createElement("span");
-    badgeSpan.style.lineHeight = "50px";
-    badgeSpan.style.color = "white";
-    badgeSpan.style.pointerEvents = "none";
-    badgeSpan.innerText = offeringContainers.length.toString();
-    
-    var badgeContainer = document.createElement("div");
-    badgeContainer.style.backgroundColor = "orange";
-    badgeContainer.style.position = "fixed";
-    badgeContainer.style.bottom = "25px";
-    badgeContainer.style.left = "25px";
-    badgeContainer.style.width = "50px";
-    badgeContainer.style.height = "50px";
-    badgeContainer.style.borderRadius = "50%";
-    badgeContainer.style.textAlign = "center";
-    badgeContainer.style.cursor = "pointer";
-    
-    badgeContainer.setAttribute("title", "Verborgen huizen");
-    
-    var showing = false;
-    badgeContainer.addEventListener("click", function(event)
+    if (badgeContainer == null)
     {
-        for (var i = 0; i < offeringContainers.length; i++)
-        {
-            offeringContainers[i].style.display = showing ? "none" : "block";
-        }
-        this.style.backgroundColor = showing ? "orange" : "red";
-        this.setAttribute("title", showing ? "Verborgen huizen" : "Huizen te verbergen");
-        showing = !showing;
-    });
-    
-    badgeContainer.appendChild(badgeSpan);
-    
-    document.body.appendChild(badgeContainer);
-}
+        badgeSpan = document.createElement("span");
+        badgeSpan.style.lineHeight = "50px";
+        badgeSpan.style.color = "white";
+        badgeSpan.style.pointerEvents = "none";
 
-setTimeout(function()
-{
-    var offeringContainers = document.querySelectorAll(itemSelector);
-    console.log(offeringContainers);
+        badgeContainer = document.createElement("div");
+        badgeContainer.style.position = "fixed";
+        badgeContainer.style.bottom = "25px";
+        badgeContainer.style.left = "25px";
+        badgeContainer.style.width = "50px";
+        badgeContainer.style.height = "50px";
+        badgeContainer.style.borderRadius = "50%";
+        badgeContainer.style.textAlign = "center";
+        badgeContainer.style.cursor = "pointer";
+
+        badgeContainer.addEventListener("click", function(event)
+        {
+            for (var i = 0; i < offeringContainers.length; i++)
+            {
+                offeringContainers[i].style.display = badgeListingsShowing ? "none" : "block";
+            }
+            this.style.backgroundColor = badgeListingsShowing ? "orange" : "red";
+            this.setAttribute("title", badgeListingsShowing ? "Verborgen huizen" : "Huizen te verbergen");
+            badgeListingsShowing = !showing;
+        });
+
+        badgeContainer.appendChild(badgeSpan);
+        document.body.appendChild(badgeContainer);
+    }
+
     if (offeringContainers.length == 0)
     {
-        return false;
+        badgeContainer.style.display = "none";
     }
-    
-    var hiddenOfferings = [];
-    for (var i = 0; i < offeringContainers.length; i++)
+    else
+    {        
+        badgeListingsShowing = false;
+        badgeContainer.setAttribute("title", "Verborgen huizen");
+        badgeContainer.style.backgroundColor = "orange";
+        badgeSpan.innerText = offeringContainers.length.toString();
+
+        badgeContainer.style.display = "block";
+    }
+}
+
+function Run()
+{
+    setTimeout(function()
     {
-        var offeringContainer = offeringContainers[i];
-        if (ContainsIllegalLabel(offeringContainer))
+        var offeringContainers = document.querySelectorAll(itemSelector);
+        if (offeringContainers.length == 0)
         {
-            offeringContainer.style.display = "none";
-            hiddenOfferings.push(offeringContainer);
+            ShowHiddenBadge([]);
+            return;
         }
-    }
-    
-    if (hiddenOfferings.length > 0)
-    {
+
+        var hiddenOfferings = [];
+        for (var i = 0; i < offeringContainers.length; i++)
+        {
+            var offeringContainer = offeringContainers[i];
+            if (ContainsIllegalLabel(offeringContainer))
+            {
+                offeringContainer.style.display = "none";
+                hiddenOfferings.push(offeringContainer);
+            }
+        }
+
         ShowHiddenBadge(hiddenOfferings);
+    }, 1000);
+}
+
+Run();
+
+// Check for url changes
+var currentUrl = window.location.href;
+setInterval(function()
+{
+    if (currentUrl != window.location.href)
+    {
+        Run();
+        currentUrl = window.location.href;
     }
-    
-    return true;
-}, 1000);
+}, 50);
