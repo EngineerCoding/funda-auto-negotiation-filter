@@ -1,0 +1,13 @@
+{   
+    "name": "Funda filter", 
+    "version": "0.1", 
+    "description": "Filter huizen welke in onderhandeling zijn automatisch", 
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["https://www.funda.nl/koop/*/"],
+            "run_at": "document_idle",
+            "js": ["funda-filter.js"]
+        }
+    ]
+}
