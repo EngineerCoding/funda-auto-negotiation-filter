@@ -28,6 +28,7 @@ function ContainsIllegalLabel(offeringContainer)
 var badgeContainer;
 var badgeSpan;
 var badgeListingsShowing;
+var _offeringContainers;
 
 function ShowHiddenBadge(offeringContainers)
 {
@@ -50,9 +51,9 @@ function ShowHiddenBadge(offeringContainers)
 
         badgeContainer.addEventListener("click", function(event)
         {
-            for (var i = 0; i < offeringContainers.length; i++)
+            for (var i = 0; i < _offeringContainers.length; i++)
             {
-                offeringContainers[i].style.display = badgeListingsShowing ? "none" : "block";
+                _offeringContainers[i].style.display = badgeListingsShowing ? "none" : "block";
             }
             this.style.backgroundColor = badgeListingsShowing ? "orange" : "red";
             this.setAttribute("title", badgeListingsShowing ? "Verborgen huizen" : "Huizen te verbergen");
@@ -63,6 +64,7 @@ function ShowHiddenBadge(offeringContainers)
         document.body.appendChild(badgeContainer);
     }
 
+    _offeringContainers = offeringContainers;
     if (offeringContainers.length == 0)
     {
         badgeContainer.style.display = "none";
